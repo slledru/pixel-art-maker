@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const numberOfColors = 36;
   const maxHistory = 10;
-  const maxPixel = 1440;
+  const maxPixel = 1872;
   const LOCAL_STORAGE = 'pixel_art';
   const colors = createColorPalette();
   let selectedColor;

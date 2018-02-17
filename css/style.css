@@ -6,7 +6,7 @@ body {
   background-color: #EEE;
   border-radius: 10px;
   display: flex;
-  height: 500px;
+  height: 600px;
   justify-content: center;
   margin: auto;
   width: 720px;
@@ -14,7 +14,7 @@ body {
 
 .inner-container {
   background-color: #FFF;
-  height: 96%;
+  height: 97%;
   margin: auto;
   width: 590px;
 }
@@ -39,14 +39,14 @@ select {
 }
 #canvas {
   background-color: #FFF;
-  height: 75%;
+  height: 80%;
   margin: 5px 5px 0 5px;
 }
 
 #palette {
   background-color: #EEE;
-  height: 24%;
-  margin: 5px 0 0 0;
+  height: 18%;
+  margin: 10px 0 0 0;
 }
 
 #palette div {
