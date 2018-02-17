@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const numberOfColors = 36;
+  const numberOfColors = 38;
   const maxHistory = 10;
-  const maxPixel = 1872;
+  const maxPixel = 1750;
   const LOCAL_STORAGE = 'pixel_art';
   const colors = createColorPalette();
   let selectedColor;
@@ -51,36 +51,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function createColorPalette() {
     let colors = [
-      '#DB2500',
-      '#FF5106',
       '#FF8C6E',
+      '#EA8746',
+      '#FF5106',
       '#FF0C00',
+      '#DB2500',
+      '#EEFF00',
       '#FFEE00',
       '#DDBC9D',
-      '#35728A',
-      '#582627',
-      '#EA8746',
-      '#2EEDEC',
+      '#C9AEC7',
       '#7B549A',
-      '#7B9A54',
-      '#281EFF',
       '#4998E9',
       '#7B7AFF',
-      '#C9AEC7',
-      '#9550F0',
-      '#10702E',
-      '#140079',
-      '#600080',
-      '#3001E2',
       '#A035FF',
-      '#0B1675',
-      '#382681',
+      '#9550F0',
+      '#600080',
+      '#7B9A54',
+      '#518806',
+      '#10702E',
+      '#358A72',
+      '#35728A',
+      '#8C886E',
       '#51FF06',
       '#8CFF6E',
       '#0CFF00',
-      '#EEFF00',
-      '#358A72',
+      '#2EEDEC',
+      '#281EFF',
+      '#3001E2',
+      '#382681',
+      '#140079',
+      '#0B1675',
       '#631A09',
+      '#582627',
       '#000000',
       '#444444',
       '#888888',
@@ -156,8 +158,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
+  function isWhiteSpace(color) {
+    return (color === '#FFFFFF' ||
+            color === '#FFF' ||
+            color === 'white' ||
+            color === 'rgb(255, 255, 255)');
+  }
   function draw(pixel, color) {
     pixel.style.backgroundColor = color;
+    if (!isWhiteSpace(color)) {
+      pixel.style.borderColor = color;
+    }
   }
   function startDrawing(event) {
     if (event.target.classList.contains('pixel')) {
@@ -205,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < canvas.children.length; i++) {
       let pixel = canvas.children[i];
       draw(pixel, '#FFF');
+      pixel.style.borderColor = '#C8C8C8';
     }
   }
 });

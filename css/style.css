@@ -6,17 +6,17 @@ body {
   background-color: #EEE;
   border-radius: 10px;
   display: flex;
-  height: 600px;
+  height: 550px;
   justify-content: center;
   margin: auto;
-  width: 720px;
+  width: 740px;
 }
 
 .inner-container {
   background-color: #EEE;
   height: 97%;
   margin: auto;
-  width: 588px;
+  width: 611.6px;
 }
 
 #button-panel {
@@ -30,18 +30,19 @@ button {
   font-weight: bold;
   height: 25px;
   margin: 5px 0 5px 0;
-  width: 60px;
+  width: 70px;
 }
 select {
   height: 25px;
   margin: 5px 0 5px 0;
-  width: 60px;
+  width: 70px;
 }
 #canvas {
   background-color: #FFF;
   border: 1px solid #CCC;
-  height: 468px;
+  height: 419.1px;
   margin: 5px 5px 0 5px;
+  padding: 0;
 }
 
 #palette {
@@ -58,6 +59,7 @@ select {
   color: #444;
   font-weight: bold;
   height: 20px;
+  padding-left: 10px;
   margin: 7px 10px 0 0;
 }
 
@@ -73,7 +75,7 @@ select {
   float: right;
   margin-top: 5px;
   margin-left: auto;
-  margin-right: 10px;
+  margin-right: 7px;
 }
 
 .pixel {
