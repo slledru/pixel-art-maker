@@ -9,16 +9,29 @@ body {
   height: 500px;
   justify-content: center;
   margin: auto;
-  width: 600px;
+  width: 720px;
 }
 
 .inner-container {
   background-color: #FFF;
   height: 96%;
   margin: auto;
-  width: 98%;
+  width: 600px;
 }
 
+.button-panel {
+  margin: 10px;
+  width: 80px;
+}
+
+button {
+  border-radius: 4px;
+  color: #444;
+  font-weight: bold;
+  height: 25px;
+  margin: 5px 0 5px 0;
+  width: 60px;
+}
 #canvas {
   background-color: #FFF;
   height: 75%;
@@ -37,7 +50,8 @@ body {
 
 #color-label {
   background-color: #EEE;
-  font-size: 48;
+  color: #444;
+  font-weight: bold;
   height: 20px;
   margin: 7px 10px 0 0;
 }
