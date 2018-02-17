@@ -74,33 +74,38 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     return colors;
   }
+  function addNewColorToHistory(newColor) {
+    if (newColor !== undefined &&
+        !colorHistory.includes(newColor)) {
+      let historyDiv = document.getElementById('history');
+      // colorHistory keeps maximum of 10 previously selected colors
+      // if colorHistory is full already, remove the oldest color
+      if (colorHistory.length >= maxHistory) {
+        colorHistory.pop();
+        historyDiv.removeChild(historyDiv.lastElementChild);
+      }
+      colorHistory.unshift(newColor);
+      // add the new div in front of the history
+      let div = document.createElement('div');
+      div.classList.add('color-palette');
+      div.style.marginTop = 0;
+      div.style.backgroundColor = newColor;
+      if (historyDiv.children.length > 0) {
+        historyDiv.insertBefore(div, historyDiv.children[0]);
+      } else {
+        historyDiv.appendChild(div);
+      }
+    }
+  }
   function pickColor(event) {
     if (event.target.classList.contains('color-palette')) {
       selectedColor = event.target.style.backgroundColor;
-      if (!colorHistory.includes(selectedColor)) {
-        let history = document.getElementById('history');
-        // colorHistory keeps maximum of 10 previously selected colors
-        // if colorHistory is full already, remove the oldest color
-        if (colorHistory.length >= maxHistory) {
-          colorHistory.pop();
-          history.removeChild(history.lastElementChild);
-        }
-        colorHistory.unshift(selectedColor);
-        // add the new div in front of the history
-        let color = document.createElement('div');
-        color.classList.add('color-palette');
-        color.style.marginTop = 0;
-        color.style.backgroundColor = selectedColor;
-        if (history.children.length > 0) {
-          history.insertBefore(color, history.children[0]);
-        } else {
-          history.appendChild(color);
-        }
-      }
+      addNewColorToHistory(selectedColor);
     }
   }
   function selectColor(event) {
     selectedColor = event.target.value;
+    addNewColorToHistory(selectedColor);
   }
   function dropColor(event) {
     if (selectedColor !== undefined) {
