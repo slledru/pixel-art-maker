@@ -16,10 +16,10 @@ body {
   background-color: #FFF;
   height: 96%;
   margin: auto;
-  width: 600px;
+  width: 590px;
 }
 
-.button-panel {
+#button-panel {
   margin: 10px;
   width: 80px;
 }

@@ -1,25 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
   const numberOfColors = 36;
   const maxHistory = 10;
+  const maxPixel = 1440;
+  const LOCAL_STORAGE = 'pixel_art';
   const colors = createColorPalette();
   let selectedColor;
   let inProgress = false;
   let colorHistory = [];
 
+  // drawing area and event handlers
   let canvas = document.getElementById('canvas');
   drawPaintArea(canvas);
-  canvas.addEventListener('click', dropColor);
+  canvas.addEventListener('click', handleClick);
   canvas.addEventListener('mousemove', continuousDrawing);
   canvas.addEventListener('mousedown', startDrawing);
   canvas.addEventListener('mouseup', endDrawing);
+
+  // color palette area and event handler
   let palette = document.getElementById('palette');
   drawPaletteArea(palette);
   palette.addEventListener('click', pickColor);
+
+  // color chooser and event handler
   let chooser = document.getElementById('color-chooser');
   chooser.addEventListener('input', selectColor);
 
+  // button panel and event handler
+  let buttonPanel = document.getElementById('button-panel');
+  buttonPanel.addEventListener('click', handleClick);
+
   function drawPaintArea(canvas) {
-    for (let j = 0; j < 1440; j++) {
+    for (let j = 0; j < maxPixel; j++) {
       let col = document.createElement('div');
       col.classList.add('pixel');
       canvas.appendChild(col);
@@ -75,8 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return colors;
   }
   function addNewColorToHistory(newColor) {
-    if (newColor !== undefined &&
-        !colorHistory.includes(newColor)) {
+    if (newColor !== undefined && !colorHistory.includes(newColor)) {
       let historyDiv = document.getElementById('history');
       // colorHistory keeps maximum of 10 previously selected colors
       // if colorHistory is full already, remove the oldest color
@@ -107,10 +117,23 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedColor = event.target.value;
     addNewColorToHistory(selectedColor);
   }
-  function dropColor(event) {
-    if (selectedColor !== undefined) {
-      if (event.target.classList.contains('pixel')) {
+  function handleClick(event) {
+    if (event.target.classList.contains('pixel')) {
+      if (selectedColor !== undefined) {
         event.target.style.backgroundColor = selectedColor;
+      }
+    } else if (event.target.tagName.toLowerCase() === 'button') {
+      switch (event.target.id) {
+        case 'save-button':
+          saveDrawing();
+          break;
+        case 'load-button':
+          loadDrawing();
+          break;
+        case 'clear-button':
+          clearDrawing();
+          break;
+        default:
       }
     }
   }
@@ -131,6 +154,44 @@ document.addEventListener('DOMContentLoaded', () => {
   function endDrawing(event) {
     if (event.target.classList.contains('pixel')) {
       inProgress = false;
+    }
+  }
+  function loadDrawing() {
+    // Check browser support
+    if ((typeof Storage) !== 'undefined') {
+      let storage = localStorage.getItem(LOCAL_STORAGE);
+      if (storage !== undefined) {
+        let colors = JSON.parse(storage);
+        if (Array.isArray(colors)) {
+          clearDrawing();
+          let canvas = document.getElementById('canvas');
+          if (colors.length === canvas.children.length) {
+            for (let i = 0; i < canvas.children.length; i++) {
+              let pixel = canvas.children[i];
+              pixel.style.backgroundColor = colors[i];
+            }
+          }
+        }
+      }
+    }
+  }
+  function saveDrawing() {
+    // Check browser support
+    if ((typeof Storage) !== 'undefined') {
+      let canvas = document.getElementById('canvas');
+      let colors = [];
+      for (let i = 0; i < canvas.children.length; i++) {
+        let pixel = canvas.children[i];
+        colors.push(pixel.style.backgroundColor);
+      }
+      localStorage.setItem(LOCAL_STORAGE, JSON.stringify(colors));
+    }
+  }
+  function clearDrawing() {
+    let canvas = document.getElementById('canvas');
+    for (let i = 0; i < canvas.children.length; i++) {
+      let pixel = canvas.children[i];
+      pixel.style.backgroundColor = '#FFF';
     }
   }
 });
