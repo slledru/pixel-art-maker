@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedColor;
   let inProgress = false;
   let colorHistory = [];
+  let fillMode = false;
 
   // drawing area and event handlers
   let canvas = document.getElementById('canvas');
@@ -29,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let buttonPanel = document.getElementById('button-panel');
   buttonPanel.addEventListener('click', handleClick);
 
+  // drawing mode selection and event handler
+  let option = document.getElementById('paint-mode');
+  option.addEventListener('change', selectMode);
+
   function drawPaintArea(canvas) {
     for (let j = 0; j < maxPixel; j++) {
       let col = document.createElement('div');
@@ -40,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let j = 0; j < numberOfColors; j++) {
       let col = document.createElement('div');
       col.classList.add('color-palette');
-      col.style.backgroundColor = colors[j];
+      draw(col, colors[j]);
       palette.appendChild(col);
     }
   }
@@ -99,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let div = document.createElement('div');
       div.classList.add('color-palette');
       div.style.marginTop = 0;
-      div.style.backgroundColor = newColor;
+      draw(div, newColor);
       if (historyDiv.children.length > 0) {
         historyDiv.insertBefore(div, historyDiv.children[0]);
       } else {
@@ -117,10 +122,15 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedColor = event.target.value;
     addNewColorToHistory(selectedColor);
   }
+  function selectMode(event) {
+    if (event.target.id === 'paint-mode') {
+      fillMode = (event.target.value === 'fill');
+    }
+  }
   function handleClick(event) {
     if (event.target.classList.contains('pixel')) {
       if (selectedColor !== undefined) {
-        event.target.style.backgroundColor = selectedColor;
+        draw(event.target, selectedColor);
       }
     } else if (event.target.tagName.toLowerCase() === 'button') {
       switch (event.target.id) {
@@ -141,10 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (selectedColor !== undefined) {
       if (inProgress) {
         if (event.target.classList.contains('pixel')) {
-          event.target.style.backgroundColor = selectedColor;
+          draw(event.target, selectedColor);
         }
       }
     }
+  }
+  function draw(pixel, color) {
+    pixel.style.backgroundColor = color;
   }
   function startDrawing(event) {
     if (event.target.classList.contains('pixel')) {
@@ -168,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (colors.length === canvas.children.length) {
             for (let i = 0; i < canvas.children.length; i++) {
               let pixel = canvas.children[i];
-              pixel.style.backgroundColor = colors[i];
+              draw(pixel, colors[i]);
             }
           }
         }
@@ -191,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById('canvas');
     for (let i = 0; i < canvas.children.length; i++) {
       let pixel = canvas.children[i];
-      pixel.style.backgroundColor = '#FFF';
+      draw(pixel, '#FFF');
     }
   }
 });

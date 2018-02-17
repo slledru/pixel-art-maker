@@ -32,6 +32,11 @@ button {
   margin: 5px 0 5px 0;
   width: 60px;
 }
+select {
+  height: 25px;
+  margin: 5px 0 5px 0;
+  width: 60px;
+}
 #canvas {
   background-color: #FFF;
   height: 75%;
