@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pixel === parent.children[index]) {
           let posX = index % widthInPixel;
           let posY = Math.floor(index / widthInPixel);
-          return { x: posX, y: posY };
+          return {x: posX, y: posY};
         }
       }
     }
@@ -314,7 +314,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (storage !== undefined) {
         let colors = JSON.parse(storage);
         if (Array.isArray(colors)) {
-          resetMode();
           clearDrawing();
           let canvas = document.getElementById('canvas');
           if (colors.length === canvas.children.length) {
@@ -340,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   function clearDrawing() {
+    resetMode();
     let canvas = document.getElementById('canvas');
     for (let i = 0; i < canvas.children.length; i++) {
       let pixel = canvas.children[i];
