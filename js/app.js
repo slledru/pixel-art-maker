@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const numberOfColors = 38;
   const maxHistory = 10;
-  const maxPixel = 1750;
+  const heightInPixel = 35;
+  const widthInPixel = 50;
+  const maxPixel = heightInPixel * widthInPixel;
   const LOCAL_STORAGE = 'pixel_art';
   const colors = createColorPalette();
   let selectedColor;
@@ -106,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let div = document.createElement('div');
       div.classList.add('color-palette');
       div.style.marginTop = 0;
-      draw(div, newColor);
+      div.style.backgroundColor = newColor;
       if (historyDiv.children.length > 0) {
         historyDiv.insertBefore(div, historyDiv.children[0]);
       } else {
@@ -128,6 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.target.id === 'paint-mode') {
       fillMode = (event.target.value === 'fill');
     }
+  }
+  function resetMode() {
+    let mode = document.getElementById('paint-mode');
+    mode.selectedIndex = 0;
+    fillMode = false;
   }
   function handleClick(event) {
     if (event.target.classList.contains('pixel')) {
@@ -158,16 +165,136 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-  function isWhiteSpace(color) {
-    return (color === '#FFFFFF' ||
-            color === '#FFF' ||
-            color === 'white' ||
-            color === 'rgb(255, 255, 255)');
+  function isWhiteSpace(pixel) {
+    let color = pixel.style.backgroundColor;
+    return (color === '' || color === '#FFFFFF' || color === '#FFF' || color === 'white' || color === 'rgb(255, 255, 255)');
+  }
+  function drawSinglePixel(pixel, color) {
+    pixel.style.backgroundColor = color;
+    if (!isWhiteSpace(pixel)) {
+      pixel.style.borderColor = color;
+    }
+  }
+  function getPosition(pixel) {
+    let parent = pixel.parentElement;
+    if (parent !== undefined) {
+      for (let index = 0; index < parent.children.length; index++) {
+        if (pixel === parent.children[index]) {
+          let posX = index % widthInPixel;
+          let posY = Math.floor(index / widthInPixel);
+          return {x: posX, y: posY};
+        }
+      }
+    }
+    return undefined;
+  }
+  function getElementIndex(pos) {
+    if (pos !== undefined) {
+      let index = (pos.y * widthInPixel) + pos.x;
+      return index;
+    }
+    return -1;
+  }
+  function getAboveElement(pixel) {
+    let pos = getPosition(pixel);
+    if (pos !== undefined) {
+      if (pos.y - 1 >= 0) {
+        let index = getElementIndex({
+          x: pos.x,
+          y: pos.y - 1
+        });
+        if (index >= 0) {
+          let above = pixel.parentElement.children[index];
+          if (isWhiteSpace(above)) {
+            return above;
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+  function getBelowElement(pixel) {
+    let pos = getPosition(pixel);
+    if (pos !== undefined) {
+      if (pos.y + 1 < heightInPixel) {
+        let index = getElementIndex({
+          x: pos.x,
+          y: pos.y + 1
+        });
+        if (index >= 0) {
+          let below = pixel.parentElement.children[index];
+          if (isWhiteSpace(below)) {
+            return below;
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+  function getRightElement(pixel) {
+    let pos = getPosition(pixel);
+    if (pos !== undefined) {
+      if (pos.x + 1 < widthInPixel) {
+        let index = getElementIndex({
+          x: pos.x + 1,
+          y: pos.y
+        });
+        if (index >= 0) {
+          let right = pixel.parentElement.children[index];
+          if (isWhiteSpace(right)) {
+            return right;
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+  function getLeftElement(pixel) {
+    let pos = getPosition(pixel);
+    if (pos !== undefined) {
+      if (pos.x - 1 >= 0) {
+        let index = getElementIndex({
+          x: pos.x - 1,
+          y: pos.y
+        });
+        if (index >= 0) {
+          let left = pixel.parentElement.children[index];
+          if (isWhiteSpace(left)) {
+            return left;
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+  function fillArea(pixel, color) {
+    if (pixel !== undefined) {
+      let next = getAboveElement(pixel);
+      if (next !== undefined) {
+        fillArea(next, color);
+      }
+      next = getLeftElement(pixel);
+      if (next !== undefined) {
+        fillArea(next, color);
+      }
+      if (isWhiteSpace(pixel)) {
+        drawSinglePixel(pixel, color);
+      }
+      next = getRightElement(pixel);
+      if (next !== undefined) {
+        fillArea(next, color);
+      }
+      next = getBelowElement(pixel);
+      if (next !== undefined) {
+        fillArea(next, color);
+      }
+    }
   }
   function draw(pixel, color) {
-    pixel.style.backgroundColor = color;
-    if (!isWhiteSpace(color)) {
-      pixel.style.borderColor = color;
+    if (fillMode) {
+      fillArea(pixel, color);
+    } else {
+      drawSinglePixel(pixel, color);
     }
   }
   function startDrawing(event) {
@@ -187,6 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (storage !== undefined) {
         let colors = JSON.parse(storage);
         if (Array.isArray(colors)) {
+          resetMode();
           clearDrawing();
           let canvas = document.getElementById('canvas');
           if (colors.length === canvas.children.length) {
