@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pixel === parent.children[index]) {
           let posX = index % widthInPixel;
           let posY = Math.floor(index / widthInPixel);
-          return {x: posX, y: posY};
+          return { x: posX, y: posY };
         }
       }
     }
